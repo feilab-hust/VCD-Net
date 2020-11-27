@@ -20,7 +20,7 @@ Edit the **/vcdnet/config.py** to ensure:
 config.PSF.n_slices = 31
 label                             = 'neuron_8um_simu_40x_n11_[m30-0]_step1um'
 config.model                      = 'function'
-config.VALID.lf2d_path            = '../../data/to_predict2/'
+config.VALID.lf2d_path            = './data/to_predict2/'
 ```
 
 And run 
