@@ -1,0 +1,7 @@
+easydict==1.9
+imageio==2.4.1
+numpy==1.15.4
+scikit-image==0.14.1
+scipy==1.2.0
+tensorflow-gpu==1.14.0
+
