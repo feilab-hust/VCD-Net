@@ -19,8 +19,8 @@ config.model                      = 'structure'
 # config.model                      = 'function'
 
 ## Training 
-config.TRAIN.target3d_path        = '../../data/TrainingPair/WF/'                   # 3-D targets for training
-config.TRAIN.lf2d_path            = '../../data/TrainingPair/LF/'                   # LF projections for training
+config.TRAIN.target3d_path        = './data/train/WF/'                   # 3-D targets for training
+config.TRAIN.lf2d_path            = './data/train/LF/'                   # LF projections for training
 
 config.TRAIN.test_saving_path     = "./sample/test/{}/".format(label)
 config.TRAIN.ckpt_saving_interval = 10
@@ -39,10 +39,10 @@ config.TRAIN.decay_every = 50
 
 ## Inference/Prediction
 # config.VALID.ckpt_dir             = config.TRAIN.ckpt_dir                         # use trained checkpoint directly, for general purpose
-config.VALID.ckpt_dir             = '../../data/checkpoint/{}/'.format(label)        # specified a checkpoint somewhere, for code-ocean purpose
-config.VALID.lf2d_path            = '../../data/to_predict/'                           # location of LF measurements to be reconstructed
+config.VALID.ckpt_dir             = './checkpoint/{}/'.format(label)        # specified a checkpoint somewhere, for code-ocean purpose
+config.VALID.lf2d_path            = './data/to_predict/'                           # location of LF measurements to be reconstructed
 # config.VALID.lf2d_path            = '../../data/to_predict2/'
-config.VALID.saving_path          = '../../results/VCD_{}/'.format(label)
+config.VALID.saving_path          = './results/VCD_{}/'.format(label)
 
 
 

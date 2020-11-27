@@ -9,7 +9,7 @@ Tensorflow implementation of VCD-Net for high-efficiency light field reconstruct
 
 ## Install
 
-Clone the code repository using Git or just download the zip file. 
+Clone the code repository using Git or just download the zip file. Download the pretrained model and the example data from [Google drive](https://drive.google.com/file/d/1h_Q7ylHeMh9dCUeo8Fz8o2j0WsM25-2g/view?usp=sharing). The directory should be like this:
 ```    
 .
 ├── config.py
@@ -17,6 +17,8 @@ Clone the code repository using Git or just download the zip file.
 ├── eval.py
 ├── train.py
 ├── utils.py
+├── checkpoint
+├── data
 ├── model
     └── util
     └── unet.py
