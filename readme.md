@@ -1,5 +1,8 @@
+This package contains: 
+1. /datapre: Matlab scripts (GUI interface provided) for VCD-Net training dataset synthesis
+2. /vcdnet: Source code for deep-learning based light field microscopy reconstruction
 
-The [notebook](./VCD-LFM pipeline.ipynb) will navigate you through the pipeline of VCD-LFM.
+For usage demo, we created a jupyter [notebook](./VCD-LFM pipeline.ipynb) to navigate through the pipeline. Example data can be downloaded from [here](https://drive.google.com/file/d/1h_Q7ylHeMh9dCUeo8Fz8o2j0WsM25-2g/view?usp=sharing). After unzip, put the `data/` and `checkpoint/` folder under `vcdnet/`.  
 
 
 ===============================================================================================
@@ -12,8 +15,6 @@ To check the model, go to **/vcdnet/model/unet.py->UNet_B**
 The general pipeline stays the same and the only thing to do for model switching is to change from
 `config.model                      = 'structure'` to 
 `config.model                      = 'function'` in  **/vcdnet/config.py**
-
-we provide pretraned models and example dataset for trainig and inference, which can be downloaded from [here](https://drive.google.com/file/d/1h_Q7ylHeMh9dCUeo8Fz8o2j0WsM25-2g/view?usp=sharing). After unzip, put the `data/` and `checkpoint/` folder under `vcdnet/`.
 
 Edit the **/vcdnet/config.py** to ensure:
 ```
