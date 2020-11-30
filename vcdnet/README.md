@@ -1,6 +1,6 @@
 # VCDNet
 
-Tensorflow implementation of VCD-Net for high-efficiency light field reconstruction. Check [this repo](https://github.com/xinDW/LFRNet) (@Hao Zhang) for original code and quicker update.
+Tensorflow implementation of VCD-Net for high-efficiency light field reconstruction. Check [this repo](https://github.com/xinDW/LFRNet) (@Hao Zhang) for original code.
 
 ## Requirements
 
