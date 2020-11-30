@@ -14,6 +14,8 @@ config.n_channels   = 1                                                         
 
 label                             = 'tubulin_40x_n11_[m30-30]_step1um_xl9_num120_sparse'        # Distingiushable label for saving the checkpoint files and validation result
 # label                             = 'neuron_8um_simu_40x_n11_[m30-0]_step1um'
+# label                             = 'beads_empirical_40x_n11_[m30-30]_step1um'
+# label                             = 'worm_empirical_40x_n11_[m30-0]_step1um'
 config.label                      = label     
 config.model                      = 'structure'
 # config.model                      = 'function'
@@ -38,10 +40,11 @@ config.TRAIN.lr_decay    = 0.1
 config.TRAIN.decay_every = 50
 
 ## Inference/Prediction
-# config.VALID.ckpt_dir             = config.TRAIN.ckpt_dir                         # use trained checkpoint directly, for general purpose
-config.VALID.ckpt_dir             = './checkpoint/{}/'.format(label)        # specified a checkpoint somewhere, for code-ocean purpose
+config.VALID.ckpt_dir             = config.TRAIN.ckpt_dir                          # use trained checkpoint 
 config.VALID.lf2d_path            = './data/to_predict/'                           # location of LF measurements to be reconstructed
-# config.VALID.lf2d_path            = '../../data/to_predict2/'
+# config.VALID.lf2d_path            = './data/to_predict2/'
+# config.VALID.lf2d_path            = './data/to_predict_beads/'
+# config.VALID.lf2d_path            = './data/to_predict_worm/'
 config.VALID.saving_path          = './results/VCD_{}/'.format(label)
 
 

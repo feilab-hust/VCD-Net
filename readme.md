@@ -20,7 +20,7 @@ High-efficiency light field microscopy reconstruction for VCD-LFM.  *todo: add r
 ### Usage
 For usage demo, we created a jupyter [notebook](https://github.com/feilab-hust/VCD-Net/blob/main/VCD-LFM%20pipeline.ipynb) to navigate through the pipeline. Example data can be downloaded from [here](https://drive.google.com/file/d/1h_Q7ylHeMh9dCUeo8Fz8o2j0WsM25-2g/view?usp=sharing). After unzip, put the `data/` and `checkpoint/` folder under `vcdnet/`. 
 
-#### Updates 10.22.2020
+### Updates 10.22.2020
 **In current revision, we added an option to switch to a modified model for function imaging data reconstruction.**
 
 To check the model, go to **/vcdnet/model/unet.py->UNet_B**
@@ -50,7 +50,35 @@ python3 eval.py --cpu
 
 to reconstruct the demo images. 
 
-#### Updates 11.26.2020
+### Updates 11.26.2020
 More examples were added to the example dataset.
 
+#### Fluo Beads
+Edit the **/vcdnet/config.py** to ensure:
+```
+config.PSF.n_slices = 61
+label                             = 'beads_empirical_40x_n11_[m30-30]_step1um'
+config.model                      = 'structure'
+config.VALID.lf2d_path            = './data/to_predict_beads/'
+```
 
+And run 
+```
+cd /code/vcdnet
+python3 eval.py
+```
+
+#### Worms
+Edit the **/vcdnet/config.py** to ensure:
+```
+config.PSF.n_slices = 31
+label                             = 'worm_empirical_40x_n11_[m30-0]_step1um'
+config.model                      = 'function'
+config.VALID.lf2d_path            = './data/to_predict_worm/'
+```
+
+And run 
+```
+cd /code/vcdnet
+python3 eval.py
+```
