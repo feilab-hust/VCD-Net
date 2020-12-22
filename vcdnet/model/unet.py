@@ -120,7 +120,7 @@ def UNet_A(lf_extra, n_slices, output_size, is_train=True, reuse=False, name='un
 
 def UNet_B(lf_extra, n_slices, output_size, 
             n_pyramid_levels=4,
-            n_base_filters=64,
+            n_base_filters=128,
             is_train=True, reuse=False, name='unet'):
     '''U-net based VCD-Net for sparse light field reconstruction, faster than UNet_A
     Params:
