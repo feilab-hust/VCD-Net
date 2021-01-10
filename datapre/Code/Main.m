@@ -22,7 +22,7 @@ function varargout = Main(varargin)
 
 % Edit the above text to modify the response to help Main
 
-% Last Modified by GUIDE v2.5 08-Jul-2020 00:19:59
+% Last Modified by GUIDE v2.5 09-Jan-2021 17:02:40
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -75,9 +75,10 @@ function saveState(handles)
     settingCropStack.CompStack = get(handles.checkboxCompStack,'Value');
     settingCropStack.FlipX = get(handles.checkboxFlipX,'Value');
     settingCropStack.FlipY = get(handles.checkboxFlipY,'Value');
-    settingCropStack.FlipZ = get(handles.checkboxFlipZ,'Value');
-    
-    
+    settingCropStack.FlipZ = get(handles.checkboxFlipZ,'Value');  
+    settingCropStack.bit8 = get(handles.checkboxbit8, 'Value');
+    settingCropStack.bit16 = get(handles.checkboxbit16, 'Value');
+        
     settingForwardProjection.BrightnessAdjust2 = get(handles.editBrightnessAdjust2,'string');
     settingForwardProjection.GaussianSigma = get(handles.editGaussianSigma,'string');
     
@@ -123,6 +124,10 @@ if exist(fileName1)
     set(handles.checkboxFlipX,'value',settingCropStack.FlipX);
     set(handles.checkboxFlipY,'value',settingCropStack.FlipY);
     set(handles.checkboxFlipZ,'value',settingCropStack.FlipZ);
+    set(handles.checkboxbit8, 'value',settingCropStack.bit8);
+    set(handles.checkboxbit16, 'value',settingCropStack.bit16);
+    
+    
 else
     set(handles.editStackDepth,'string','31');
     set(handles.editOverlap,'string','0.5');
@@ -138,6 +143,8 @@ else
     set(handles.checkboxFlipX,'value',0);
     set(handles.checkboxFlipY,'value',0);
     set(handles.checkboxFlipZ,'value',1);
+    set(handles.checkboxbit8, 'value',1);
+    set(handles.checkboxbit16, 'value',0);
 end
 
 fileName2 = '../RUN/recentsettingForwardProjection.mat';
@@ -199,6 +206,8 @@ function readState(handles)
     settingCropStack.FlipX = get(handles.checkboxFlipX,'Value');
     settingCropStack.FlipY = get(handles.checkboxFlipY,'Value');
     settingCropStack.FlipZ = get(handles.checkboxFlipZ,'Value');
+    settingCropStack.bit8 = get(handles.checkboxbit8,'Value');
+    settingCropStack.bit16 = get(handles.checkboxbit16,'Value');
     
     
     settingForwardProjection.BrightnessAdjust2 = get(handles.editBrightnessAdjust2,'string');
@@ -815,6 +824,45 @@ else
     settingCropStack.FlipZ = 0;
 end
 
+% --- Executes on button press in checkboxbit8.
+function checkboxbit8_Callback(hObject, eventdata, handles)
+% hObject    handle to checkboxbit8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkboxbit8
+global settingCropStack;
+if ( get(hObject,'Value') == get(hObject,'Max') )
+    settingCropStack.bit8 = 1;
+    settingCropStack.bit16 = 0;
+    set(handles.checkboxbit16, 'Value', settingCropStack.bit16);
+    
+else
+    settingCropStack.bit8 = 0;
+    settingCropStack.bit16 = 1;
+    set(handles.checkboxbit16, 'Value', settingCropStack.bit16);
+end
+
+% --- Executes on button press in checkboxbit16.
+function checkboxbit16_Callback(hObject, eventdata, handles)
+% hObject    handle to checkboxbit16 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkboxbit16
+global settingCropStack;
+if ( get(hObject,'Value') == get(hObject,'Max') )
+    settingCropStack.bit16 = 1;
+    settingCropStack.bit8 = 0;
+    set(handles.checkboxbit8, 'Value', settingCropStack.bit8);
+    
+else
+    settingCropStack.bit16 = 0;
+    settingCropStack.bit8 = 1;
+    set(handles.checkboxbit8, 'Value', settingCropStack.bit8);
+end
+
+
 % --- Executes during object creation, after setting all properties.
 function checkboxCompStack_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to checkboxCompStack (see GCBO)
@@ -918,6 +966,13 @@ complement_stack = settingCropStack.CompStack;
 flip_x = settingCropStack.FlipX;
 flip_y = settingCropStack.FlipY;
 flip_z = settingCropStack.FlipZ;
+if settingCropStack.bit8>settingCropStack.bit16
+    bitdepth = 8;
+elseif settingCropStack.bit8<settingCropStack.bit16
+    bitdepth = 16;
+else
+    bitdepth = 0;
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 save_path = '../Data/Substacks';
 
@@ -928,7 +983,7 @@ end
 
 crop_raw_stack(substack_depth, overlap, dx, Nnum, range_adjust, z_sampling, ...
     rotation_step, rectification_enable, rotation_enable, complement_stack,...
-    flip_x, flip_y, flip_z, file_path, file_name, save_path);
+    flip_x, flip_y, flip_z, file_path, file_name, save_path, bitdepth);
 
 disp('Rectify and Augment HR data ... done');
 
@@ -938,6 +993,7 @@ function forward
 %%% The Stacks slice number should correspond to the depth of PSF
 warning('off');
 
+load('../RUN/recentsettingCropStack.mat');
 load('../RUN/recentsettingForwardProjection.mat');
 %%%%%%%%%%%%%%%%%%%%%%%%% Projection Parameters%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 brightness_adjust = str2double(settingForwardProjection.BrightnessAdjust2);
@@ -945,6 +1001,13 @@ gpu = settingForwardProjection.GPU;
 poisson_noise = settingForwardProjection.PoissonNoise;
 gaussian_noise = settingForwardProjection.GaussianNoise;
 gaussian_sigma = str2double(settingForwardProjection.GaussianSigma);
+if settingCropStack.bit8>settingCropStack.bit16
+    bitdepth = 8;
+elseif settingCropStack.bit8<settingCropStack.bit16
+    bitdepth = 16;
+else
+    bitdepth = 0;
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 source_path = '../Data/Substacks';
@@ -953,7 +1016,7 @@ save_path = '../Data/LFforward';
 [psf_name,psf_path] = uigetfile('*.mat','Select PSF','MultiSelect','off','../PSFmatrix');
 
 forward_projection([psf_path, psf_name], poisson_noise, gaussian_noise, gaussian_sigma,...
-    brightness_adjust, gpu, source_path, save_path);
+    brightness_adjust, gpu, source_path, save_path, bitdepth);
 
 disp(['Forward Projection ... Done']);
 
@@ -969,6 +1032,13 @@ overlap = [0.5,0.5,0.];
 pixel_threshold = str2num(settingCrop.SumThreshold);
 var_threshold   = str2num(settingCrop.VarThreshold);
 save_all = settingCrop.saveAll;
+if settingCropStack.bit8>settingCropStack.bit16
+    bitdepth = 8;
+elseif settingCropStack.bit8<settingCropStack.bit16
+    bitdepth = 16;
+else
+    bitdepth = 0;
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 source_path_3d = '../Data/Substacks';
 save_path_3d = '../Data/TrainingPair/WF';
@@ -976,8 +1046,11 @@ source_path_2d = '../Data/LFforward';
 save_path_2d = '../Data/TrainingPair/LF';
 
 generate_patches(cropped_size, overlap, pixel_threshold, var_threshold, ...
-    save_all, source_path_3d, save_path_3d, source_path_2d, save_path_2d)
+    save_all, source_path_3d, save_path_3d, source_path_2d, save_path_2d, bitdepth);
 
 disp('Crop ...Done');
+
+
+
 
 

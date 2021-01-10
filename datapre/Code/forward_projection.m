@@ -1,4 +1,4 @@
-function forward_projection(psf, poisson_noise, gaussian_noise, gaussian_sigma, brightness_adjust, gpu, source_path, save_path)
+function forward_projection(psf, poisson_noise, gaussian_noise, gaussian_sigma, brightness_adjust, gpu, source_path, save_path, bitdepth)
 % FORWARD_PROJECTION projects the HR data into synthetic light field raw
 % image
 %   forward_projection(psf, poisson_noise, gaussian_noise, gaussian_sigma,...
@@ -75,7 +75,11 @@ function forward_projection(psf, poisson_noise, gaussian_noise, gaussian_sigma, 
             
 
             LF_raw  = (sum(stacks , 3)).* brightness_adjust;
-            LF_raw = uint8(LF_raw);
+            if bitdepth == 8
+                LF_raw = uint8(LF_raw);
+            elseif bitdepth == 16
+                LF_raw = uint16(LF_raw);
+            end                
             if poisson_noise
                 LF_raw_poisson_noise = imnoise(LF_raw, 'poisson');
             else
