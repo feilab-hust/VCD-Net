@@ -1,6 +1,6 @@
 function crop_raw_stack(substack_depth, overlap, dx, Nnum, range_adjust, z_sampling, ...
     rotation_step, rectification_enable, rotation_enable, compstack_enable,...
-    flipx, flipy, flipz, file_path, file_name, save_path)
+    flipx, flipy, flipz, file_path, file_name, save_path, bitdepth)
 % CROP_RAW_STACK crops the HR data in depth and augments the dataset
 %   crop_raw_stack(substack_depth, overlap, dx, Nnum, range_adjust, z_sampling, ...
 %                   rotation_step, rectification_enale, rotation_enable, compstack_enable,...
@@ -110,14 +110,12 @@ for n=1:file_num
                     rectified_stack = VolumeRectify(substack,xCenter,yCenter,dx,Nnum,depth);
                 else
                     rectified_stack = substack;
-                end        
-                rectified_stack = (rectified_stack ./ max(rectified_stack(:))) .* range_adjust .* 255.0;
+                end
+                rectified_stack = (rectified_stack ./ max(rectified_stack(:))) .* range_adjust .* double(2^bitdepth-1);
                 substack_name = sprintf('%s_Flip%02d_Angle%03d_SUB%02d.tif', save_name, nn_stack, angle, nn);
-                save_stack(rectified_stack, [save_path '/' substack_name]);
+                write3d(rectified_stack, [save_path '/' substack_name], bitdepth)
                 disp([substack_name ' ... ' '  done  ' ' in ' num2str(toc) ' sec']);
-            end
-            
-            
+            end            
         end
     end
         

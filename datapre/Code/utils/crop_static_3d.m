@@ -1,4 +1,4 @@
-function crop_static_3d(cropped_size, overlap, static_path, save_path, save_all, pixel_threshold, var_threshold)
+function crop_static_3d(cropped_size, overlap, static_path, save_path, save_all, pixel_threshold, var_threshold, bitdepth)
 
 %%% crop small 3-D stacks into training data
 %clear
@@ -101,14 +101,14 @@ for n = 3 : interval : file_num
                 if ~save_all
                     if pixel_sum > pixel_threshold && pixel_var > var_threshold
                         fprintf('sum %d var %d : saved as %s', pixel_sum, pixel_var, block_id)
-                        write3d(block, [save_path '/' block_id]);
+                        write3d(block, [save_path '/' block_id], bitdepth);
                     else
                         abandoned_list = [abandoned_list; block_id];
                         fprintf('sum %d var %d : abandoned', pixel_sum, pixel_var)
                     end
                 else  % save all blocks , no matter valid or not
                     fprintf('sum %d var %d : saved as %s', pixel_sum, pixel_var, block_id)
-                    write3d(block, [save_path '/' block_id]);
+                    write3d(block, [save_path '/' block_id], bitdepth);
                 end
                 fprintf('\n')
                 cropped_num_current_stack = cropped_num_current_stack + 1;
