@@ -7,6 +7,7 @@ import time
 from config import config
 
 from model import UNet_A, UNet_B
+from model.util.tf_pb import save_graph_as_pb
 from utils import *
 
 
@@ -41,7 +42,7 @@ def read_valid_images(path):
     return img_set, img_list, height, width
 
 
-def infer(epoch, batch_size=1, use_cpu=False):
+def infer(epoch, batch_size=1, use_cpu=False, save_pb=False):
     """ Infer the 3-D images from the 2-D LF images using the trained VCD-Net
 
     Params:
@@ -81,6 +82,13 @@ def infer(epoch, batch_size=1, use_cpu=False):
         print('loading %s' % ckpt_file)
         tl.files.load_and_assign_npz(sess=sess, name=ckpt_file, network=net)
         
+        if save_pb:
+            output_node_name = 'vcd_output'
+            save_graph_as_pb(sess=sess, 
+                                output_node_names=output_node_name, 
+                                output_graph_file=os.path.join(checkpoint_dir, 'vcd_%s_%s.pb' % (label, device_str.replace('/', '').replace(':', ''))))
+            return
+
         #im_buffer        = np.zeros([len(valid_lf_extras), height * n_num, width * n_num, config.PSF.n_slices])
         im_buffer        = []
         recon_start_time = time.time() 
@@ -116,6 +124,8 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--batch', type=int, default=1)
     # parser.add_argument("-r", "--recursive", help="recursively eval all images under config.VALID.lf2d_path and its sub-folders",
     #                     action="store_true") #if the option is specified, assign True to args.recursive. Not specifying it implies False.
+    parser.add_argument("--save_pb", help="save the well-trained model parameters as a pb file",
+                        action="store_true") 
 
     parser.add_argument("--cpu", help="use CPU instead of GPU for inference",
                         action="store_true") 
@@ -125,7 +135,7 @@ if __name__ == '__main__':
     batch_size = args.batch
     use_cpu = args.cpu
 
-    infer(ckpt, batch_size=batch_size, use_cpu=use_cpu)
+    infer(ckpt, batch_size=batch_size, use_cpu=use_cpu, save_pb=args.save_pb)
     
 
 
