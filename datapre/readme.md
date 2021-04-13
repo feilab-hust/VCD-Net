@@ -36,7 +36,7 @@ Transform the substacks (generated in Step 1) into synthetic 2D light-field raw 
 #### 3. Generate Patches
 Generate small patches (3D substacks v.s. 2D light field images) for VCD-Net training.
 * **Parameters**
-	* **Patch Size**: The size of the patches. 
+	* **Patch Size**: The size of the patches. **It should be divisible by the Nnum.**
 	* **SumThreshold, VarThreshold**: 2 threshold values for program to decide which of those generated blocks are lack of information and should be discarded. 
 
 * **Usage**: Input proper Patch Size and click **CropTest**. The program will then run a ‘test crop’ on some of the data and output their Sum and Var values. Then you could examine the output patches to decide threshold should to put. Input these threshold and click **Crop**. The program will read images from *./Data/Substacks* and *./Data/LFforward* and a folder *.Data/TrainingPair* will be created to store the outputs. 
